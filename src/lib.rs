@@ -40,24 +40,26 @@ impl PyRedisClient {
         })
     }
 
-    fn connect<'a>(&self, py: Python<'a>) -> PyResult<Bound<'a, PyAny>> {
+    fn connect(&self, py: Python) -> PyResult<Py<PyAny>> {
         let client = self.client.clone();
-        future_into_py(py, async move {
+        let a = future_into_py(py, async move {
             client.connect(); // While not async, it needs the reactor running.
             client
                 .wait_for_connect()
                 .await
                 .map_err(PyRedisError::from)?;
             Ok(())
-        })
+        })?;
+        Ok(a.into_pyobject(py)?.into_any().into())
     }
 
-    pub fn ping<'a>(&self, py: Python<'a>) -> PyResult<Bound<'a, PyAny>> {
+    pub fn ping(&self, py: Python) -> PyResult<Py<PyAny>> {
         let client = self.client.clone();
-        future_into_py(py, async move {
+        let a = future_into_py(py, async move {
             client.ping::<()>().await.map_err(PyRedisError::from)?;
             Ok(())
-        })
+        })?;
+        Ok(a.into_pyobject(py)?.into_any().into())
     }
 }
 
