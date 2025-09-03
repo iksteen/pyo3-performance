@@ -1,0 +1,19 @@
+[package]
+name = "pyfred"
+version = "0.0.1"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[lib]
+name = "pyfred"
+crate-type = ["cdylib"]
+
+[dependencies]
+fred = { version = "9.4.0", features = ["i-scripts"] }
+pyo3 = { version = "0.20.0" }
+pyo3-asyncio = { version = "0.20.0", features = ["tokio-runtime"] }
+tokio = "1.32.0"
+
+[profile.release]
+codegen-units = 1
+lto = "fat"
