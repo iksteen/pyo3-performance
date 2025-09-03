@@ -1,7 +1,7 @@
 use fred::prelude::*;
 use pyo3::exceptions::PyRuntimeError;
 use pyo3::prelude::*;
-use pyo3_asyncio::tokio::future_into_py;
+use pyo3_async_runtimes::tokio::future_into_py;
 
 
 pub struct PyRedisError(RedisError);
@@ -40,7 +40,7 @@ impl PyRedisClient {
         })
     }
 
-    fn connect<'a>(&self, py: Python<'a>) -> PyResult<&'a PyAny> {
+    fn connect<'a>(&self, py: Python<'a>) -> PyResult<Bound<'a, PyAny>> {
         let client = self.client.clone();
         future_into_py(py, async move {
             client.connect(); // While not async, it needs the reactor running.
@@ -52,7 +52,7 @@ impl PyRedisClient {
         })
     }
 
-    pub fn ping<'a>(&self, py: Python<'a>) -> PyResult<&'a PyAny> {
+    pub fn ping<'a>(&self, py: Python<'a>) -> PyResult<Bound<'a, PyAny>> {
         let client = self.client.clone();
         future_into_py(py, async move {
             client.ping::<()>().await.map_err(PyRedisError::from)?;
@@ -62,7 +62,7 @@ impl PyRedisClient {
 }
 
 #[pymodule]
-fn pyfred(_py: Python, m: &PyModule) -> PyResult<()> {
+fn pyfred(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_class::<PyRedisClient>()?;
     Ok(())
 }
