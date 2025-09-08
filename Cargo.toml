@@ -10,8 +10,8 @@ crate-type = ["cdylib"]
 
 [dependencies]
 fred = { version = "9.4.0", features = ["i-scripts"] }
-pyo3 = { version = "0.24.0" }
-pyo3-async-runtimes = { version = "0.24.0", features = ["tokio-runtime"] }
+pyo3 = { version = "0.21.0" }
+pyo3-asyncio-0-21 = { version = "0.21.0", features = ["tokio-runtime"] }
 tokio = "1.32.0"
 
 [profile.release]

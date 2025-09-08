@@ -1,7 +1,7 @@
 use fred::prelude::*;
 use pyo3::exceptions::PyRuntimeError;
 use pyo3::prelude::*;
-use pyo3_async_runtimes::tokio::future_into_py;
+use pyo3_asyncio_0_21::tokio::future_into_py;
 
 
 pub struct PyRedisError(RedisError);
